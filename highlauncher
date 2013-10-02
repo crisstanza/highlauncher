@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#
+# Highlauncher - There can be only one!
+# =====================================
+#
+# Version:
+#	1.0 (2013-10-02, Ubuntu 12.04 LTS)
+#
+# Examples:
+#	highlauncher Terminal gnome-terminal
+#	highlauncher Documentos 'nautilus file:///home/USERNAME/Documentos'
+#
+# See also:
+#	/usr/share/icons/Humanity/places/32/folder-pictures.svg
+#	sudo apt-get install wmctrl
+#
+
+if [ "$1" == "--install" ] ; then
+	echo "Installing (root only) in: /usr/bin/highlauncher"
+	cp highlauncher /usr/bin/highlauncher
+	echo 'Done!'
+	exit 0
+elif [ ! $# -eq 2 ] ; then
+	zenity --error --text 'Error!\n\nSintax: highlauncher &lt;WINDOW&gt; &lt;COMMAND&gt;' --title 'Highlauncher - There can be only one!' &
+	exit -1
+else
+	WINDOW=$1
+	COMMAND=$2
+	if [ `wmctrl -l | grep -c "$WINDOW"` != 0 ] ; then
+		wmctrl -a "$WINDOW" &
+	else
+		$COMMAND &
+	fi
+	exit 0
+fi
